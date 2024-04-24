@@ -1,30 +1,30 @@
-// Router is used for sending data from one to another usin API
-
-const express = require("express"); // for connecting HTTP requests & response
-const mongoose = require("mongoose"); // for connecting Mongo DB
+const express = require("express");
+const mongoose = require("mongoose");
 const routeapi = require("./routes/internship.routes.js");
+const cors = require("cors");
 
-const app = express(); // for storing in object
-app.use(express.json()); //Data in JSON format
+const app = express();
+app.use(express.json());
 
-app.use('/api/users',routeapi) // routes are defined here API calling here
+app.use(cors({
+  origin: "http://localhost:3000",
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+}));
 
+app.use('/api/users', routeapi);
 
-
-// Connecting to MongoDB server using Mongoose
 mongoose
-  .connect("mongodb://localhost:27017/internship") // Mongo db la poi edu da
+  .connect("mongodb://localhost:27017/internship")
   .then(() => {
     console.log("Connected to the database");
     app.listen(3002, () => {
-      // port no settuping
       console.log("Server is running at port 3002");
     });
   })
-  .catch(() => {
-    // (err)
-    console.log("Not connected to MongoDB");
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
   });
-app.get("/", (req, res) => { // For getting data using API
-  res.send("the Node server is running,API");
+
+app.get("/", (req, res) => {
+  res.send("The Node server is running, API");
 });
